@@ -20,7 +20,7 @@ var KarmaPhantomJSSourceMapReporter = function(formatError, baseReporterDecorato
     var specName = result.suite.join(' ') + ' ' + result.description;
     var msg = util.format(this.SPEC_FAILURE, browser, specName);
 
-    var testRx = new RegExp('((app/tests/__maps__)/(.*?\\.spec\\.js)|(public/js/)(.*?\\.js))(?:\\?[a-z0-9]+?)?(?::(\\d+):(\\d+)| \\(line (\\d+)\\))');
+    var testRx = new RegExp('((app/tests)/(.*?\\.spec\\.js)|(public/js/)(.*?\\.js))(?:\\?[a-z0-9]+?)?(?::(\\d+):(\\d+)| \\(line (\\d+)\\))');
 
     result.log.forEach(function(log) {
 
@@ -28,7 +28,9 @@ var KarmaPhantomJSSourceMapReporter = function(formatError, baseReporterDecorato
 
       // Rewrite stack trace to make use of source maps
       while ((testMatch = testRx.exec(log)) && testMatch[1]) {
-        var file = fs.readFileSync(testMatch[1].replace('public/js/', 'public/js/__maps__/') + '.map', 'utf8');
+        var file = fs.readFileSync(testMatch[1]
+          .replace('public/js/', 'public/js/__maps__/')
+          .replace('app/tests/client/', 'app/tests/__maps__/') + '.map', 'utf8');
         var sm = new SourceMapConsumer(file);
         sm.computeColumnSpans();
 
