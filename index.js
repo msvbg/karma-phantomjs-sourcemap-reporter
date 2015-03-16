@@ -64,7 +64,12 @@ var KarmaPhantomJSSourceMapReporter = function(formatError, baseReporterDecorato
         log = log.replace(testRx,
           dir+bestMapping.source+':formatted:'+bestMapping.originalLine+':'+bestMapping.originalColumn);
       }
-      msg += formatError(log, '\t');
+
+      if (typeof log === 'object') {
+        msg += formatError(log.toString(), '\t');
+      } else {
+        msg += formatError(log, '\t');
+      }
     }.bind(this));
 
     this.writeCommonMsg(msg);
