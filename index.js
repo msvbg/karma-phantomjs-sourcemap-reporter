@@ -28,9 +28,15 @@ var KarmaPhantomJSSourceMapReporter = function(formatError, baseReporterDecorato
 
       // Rewrite stack trace to make use of source maps
       while ((testMatch = testRx.exec(log)) && testMatch[1]) {
-        var file = fs.readFileSync(testMatch[1]
-          .replace('public/js/', 'public/js/__maps__/')
-          .replace('app/tests/client/', 'app/tests/__maps__/') + '.map', 'utf8');
+        var sourceMapFileName = testMatch[1]
+          .replace('app/tests/client/', 'app/tests/__maps__/') + '.map';
+
+        if (!fs.existsSync(sourceMapFileName)) {
+          console.log("ERROR: Unable to find source map " + sourceMapFileName);
+        }
+
+        var file = fs.readFileSync(sourceMapFileName, 'utf8');
+
         var sm = new SourceMapConsumer(file);
         sm.computeColumnSpans();
 
