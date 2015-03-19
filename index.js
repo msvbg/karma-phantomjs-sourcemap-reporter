@@ -2,6 +2,7 @@ var BaseColors = require('./base_colors');
 var util = require('util');
 var fs = require('fs');
 var SourceMapConsumer = require('source-map').SourceMapConsumer;
+var path = require('path');
 
 var KarmaPhantomJSSourceMapReporter = function(formatError, baseReporterDecorator) {
   baseReporterDecorator(this);
@@ -30,6 +31,8 @@ var KarmaPhantomJSSourceMapReporter = function(formatError, baseReporterDecorato
       while ((testMatch = testRx.exec(log)) && testMatch[1]) {
         var sourceMapFileName = testMatch[1]
           .replace('app/tests/client/', 'app/tests/__maps__/') + '.map';
+        var basename = path.basename(sourceMapFileName);
+        sourceMapFileName = sourceMapFileName.replace(basename+'.map', '__source_map__' + basename+'.map');
 
         if (!fs.existsSync(sourceMapFileName)) {
           console.log("ERROR: Unable to find source map " + sourceMapFileName);
@@ -67,8 +70,9 @@ var KarmaPhantomJSSourceMapReporter = function(formatError, baseReporterDecorato
         } else {
           dir = 'app/[...]/';
         }
+        var mappingName = bestMapping.source.replace('__source_map__', '');
         log = log.replace(testRx,
-          dir+bestMapping.source+':formatted:'+bestMapping.originalLine+':'+bestMapping.originalColumn);
+          dir+mappingName+':formatted:'+bestMapping.originalLine+':'+bestMapping.originalColumn);
       }
 
       if (typeof log === 'object') {
