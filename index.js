@@ -32,7 +32,7 @@ var KarmaPhantomJSSourceMapReporter = function(formatError, baseReporterDecorato
         var sourceMapFileName = testMatch[1]
           .replace('app/tests/client/', 'app/tests/__maps__/') + '.map';
         var basename = path.basename(sourceMapFileName);
-        sourceMapFileName = sourceMapFileName.replace(basename+'.map', '__source_map__' + basename+'.map');
+        sourceMapFileName = sourceMapFileName.replace(basename, '__source_map__' + basename);
 
         if (!fs.existsSync(sourceMapFileName)) {
           console.log("ERROR: Unable to find source map " + sourceMapFileName);
