@@ -70,6 +70,7 @@ var KarmaPhantomJSSourceMapReporter = function(formatError, baseReporterDecorato
         } else {
           dir = 'app/[...]/';
         }
+        if (!bestMapping.source) { continue; }
         var mappingName = bestMapping.source.replace('__source_map__', '');
         log = log.replace(testRx,
           dir+mappingName+':formatted:'+bestMapping.originalLine+':'+bestMapping.originalColumn);
